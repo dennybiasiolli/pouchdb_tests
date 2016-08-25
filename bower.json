@@ -1,0 +1,24 @@
+{
+  "name": "pouchdb_tests",
+  "description": "PouchDB tests",
+  "main": "index.js",
+  "authors": [
+    "Denny Biasiolli"
+  ],
+  "license": "ISC",
+  "keywords": [
+    "pouchdb"
+  ],
+  "homepage": "https://github.com/dennybiasiolli/pouchdb_tests",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "devDependencies": {
+    "pouchdb": "^5.4.5",
+    "angular": "^1.5.8"
+  }
+}
