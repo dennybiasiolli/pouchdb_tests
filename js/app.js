@@ -21,10 +21,18 @@ app.controller('AppController', function($scope, $q) {
     });
 
   $scope.addTodo = function() {
+    var pages = [];
+    if ($scope.isOnPage1) {
+      pages.push(1);
+    }
+    if ($scope.isOnPage2) {
+      pages.push(2);
+    }
     $scope.writeTodoOnDb({
       objType: 'todo',
       title: $scope.todoText,
-      completed: false
+      completed: false,
+      pages: pages
     });
   };
 
@@ -68,6 +76,27 @@ app.controller('AppController', function($scope, $q) {
           objType: 'todo',
           title: {
             $regex: $scope.findText
+          }
+        }
+      }))
+      .then(function(results) {
+        $scope.todos = results.docs;
+      });
+  };
+
+  $scope.filterPages = function(minPage, maxPage) {
+    $scope.todos = [];
+    $q.when(db.find({
+        selector: {
+          objType: 'todo',
+          title: {
+            $regex: $scope.findText
+          },
+          pages: {
+            $elemMatch: {
+              $gte: minPage,
+              $lte: maxPage
+            }
           }
         }
       }))
