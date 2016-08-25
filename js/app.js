@@ -2,9 +2,27 @@ var app = angular.module("myapp", []);
 
 app.controller('AppController', function($scope, $q) {
   var db = new PouchDB('todos');
+  $q.all([
+      $q.when(db.createIndex({
+        index: {
+          name: 'objType',
+          fields: ['objType']
+        }
+      })),
+      $q.when(db.createIndex({
+        index: {
+          name: 'myIndex1',
+          fields: ['title']
+        }
+      })),
+    ])
+    .then(function() {
+      $scope.showTodos();
+    });
 
   $scope.addTodo = function() {
     $scope.writeTodoOnDb({
+      objType: 'todo',
       title: $scope.todoText,
       completed: false
     });
@@ -21,12 +39,13 @@ app.controller('AppController', function($scope, $q) {
 
   $scope.showTodos = function() {
     $scope.todos = [];
-    $q.when(db.allDocs({
-        include_docs: true,
-        // descending: true
+    $q.when(db.find({
+        selector: {
+          objType: 'todo'
+        }
       }))
       .then(function(results) {
-        $scope.todos = results.rows;
+        $scope.todos = results.docs;
       });
   };
 
@@ -42,5 +61,19 @@ app.controller('AppController', function($scope, $q) {
       });
   };
 
-  $scope.showTodos();
+  $scope.findTodo = function() {
+    $scope.todos = [];
+    $q.when(db.find({
+        selector: {
+          objType: 'todo',
+          title: {
+            $regex: $scope.findText
+          }
+        }
+      }))
+      .then(function(results) {
+        $scope.todos = results.docs;
+      });
+  };
+
 });
