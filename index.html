@@ -22,6 +22,7 @@
     <h1>List : </h1>
     <ul>
       <li ng-repeat="todo in todos track by todo.doc._id">{{todo.doc.title}}
+        <button ng-click="editTodo(todo.doc, $index)">e</button>
         <button ng-click="removeTodo(todo.doc, $index)">x</button>
       </li>
     </ul>
